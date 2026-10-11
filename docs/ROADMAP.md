@@ -10,7 +10,7 @@
 - [ ] Unity editor compile and manual Windows/macOS playtest (requires editor)
 
 ## PR 2 — Physics and session correctness
-- [ ] Collision resistance and force-based dragging; prevent lightweight pushes exploiting heavy objects
+- [ ] Collision resistance and force-based dragging; replace graybox kinematic anchors without allowing lightweight pushes to exploit heavy objects
 - [ ] Camera/layout input testing at different resolutions; trackpad and accessibility
 - [ ] Scene/integration tests in Unity Test Framework
 - [ ] Balance stamina, weight, velocity and risk with measured playtests

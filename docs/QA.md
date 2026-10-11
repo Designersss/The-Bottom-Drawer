@@ -23,7 +23,7 @@ The suite exercises immutable base price→weight mapping, heavier items taking 
 
 - **Not a release gate yet:** Unity Editor compilation and standalone builds are not automated in CI (Unity editor/license/runners required).
 - No final artwork, sounds, tutorial, chapter transitions or animated depth.
-- No formal frame-level physics tests. Directly held Rigidbody2D objects use simplified MovePosition; physically accurate push/impulse cost is a separate workstream.
+- No formal frame-level physics tests. To prevent **light-object pushing of heavy expensive loot**, unselected prototype objects currently stay kinematic/anchored; grabbed objects are dynamic and move via MovePosition. Full push physics with correct energy/impulse billing is a separate workstream.
 - No production-grade cross-version save migrations. Saves are local experimental data.
 - Current prototype uses polling via Unity legacy Input API and immediate-mode OnGUI; both should be replaced/polished later.
 - No code signing/notarization or macOS Gatekeeper end-user test.

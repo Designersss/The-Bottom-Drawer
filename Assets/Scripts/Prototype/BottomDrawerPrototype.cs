@@ -237,6 +237,10 @@ public sealed class BottomDrawerPrototype : MonoBehaviour
         var rb = go.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.mass = item.Weight;
+        // Non-selected objects are anchored in the first graybox. This prevents
+        // pushing an expensive item to the extraction line with a cheap light item.
+        // True contact-force simulation is reserved for PHYSICS-02.
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         if (round) go.AddComponent<CircleCollider2D>();
@@ -263,15 +267,29 @@ public sealed class BottomDrawerPrototype : MonoBehaviour
             if (hit != null)
             {
                 _dragged = hit.GetComponent<PrototypeItem>();
-                if (_dragged != null) _selected = _dragged;
+                if (_dragged != null)
+                {
+                    _selected = _dragged;
+                    _dragged.Body.bodyType = RigidbodyType2D.Dynamic;
+                }
             }
         }
         if (Input.GetMouseButtonUp(0))
         {
             if (_dragged != null) Save();
-            _dragged = null;
+            StopDragging();
         }
         if (Input.GetKeyDown(KeyCode.Space)) ActivateAutoCollector();
+    }
+
+    private void StopDragging()
+    {
+        if (_dragged != null)
+        {
+            _dragged.Body.bodyType = RigidbodyType2D.Kinematic;
+            _dragged.Body.linearVelocity = Vector2.zero;
+            _dragged = null;
+        }
     }
 
     private bool OverUI()
@@ -286,7 +304,7 @@ public sealed class BottomDrawerPrototype : MonoBehaviour
         if (_dragged == null || _session.Status != SessionStatus.Active) return;
         if (!_session.DrainForDrag(_dragged.Definition.Weight, Time.fixedDeltaTime))
         {
-            _dragged = null;
+            StopDragging();
             _message = "Out of stamina: all unbanked items were lost.";
             Save();
             return;
@@ -350,7 +368,7 @@ public sealed class BottomDrawerPrototype : MonoBehaviour
     {
         if (_session.Bank())
         {
-            _dragged = null;
+            StopDragging();
             _message = "Run banked. Sell your loot, then start again.";
             Save();
         }
