@@ -1,0 +1,35 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+# Keep the headless core test project tracked
+!Tests/BottomDrawer.Core.Tests.csproj
+# OS
+.DS_Store
+Thumbs.db
+# Never commit developer credentials / local save games
+*.p12
+*.pfx
+*.keystore
+*.mobileprovision
+*.provisionprofile
