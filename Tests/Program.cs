@@ -19,6 +19,16 @@ internal static class Program
             if (items[i].BasePrice > items[j].BasePrice)
                 Assert(items[i].Weight > items[j].Weight, "strictly monotonic item mass");
 
+        // Check strict monotonicity for the ENTIRE supported base-price domain,
+        // not only for the ten handcrafted prototype definitions.
+        for (int price = 2; price <= GameRules.MaximumBasePrice; price++)
+            Assert(GameRules.WeightFromPrice(price) > GameRules.WeightFromPrice(price - 1),
+                "all supported base prices produce strictly increasing weight");
+        bool priceRejected = false;
+        try { new ItemDefinition("bad", "bad", GameRules.MaximumBasePrice + 1, Rarity.Rare, true); }
+        catch (ArgumentOutOfRangeException) { priceRejected = true; }
+        Assert(priceRejected, "out-of-range item pricing rejected");
+
         Assert(GameRules.DragSpeed(4f, 5) > GameRules.DragSpeed(4f, 0), "strength increases speed");
         Assert(GameRules.DragSpeed(4f, 0) < GameRules.DragSpeed(0.5f, 0), "weight slows dragging");
         Assert(GameRules.DrainPerSecond(4f) > GameRules.DrainPerSecond(0.5f), "weight increases drain");

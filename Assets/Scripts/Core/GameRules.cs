@@ -19,7 +19,7 @@ namespace BottomDrawer.Core
         {
             if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("An item requires an ID.", nameof(id));
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("An item requires a name.", nameof(name));
-            if (basePrice <= 0) throw new ArgumentOutOfRangeException(nameof(basePrice));
+            if (basePrice <= 0 || basePrice > GameRules.MaximumBasePrice) throw new ArgumentOutOfRangeException(nameof(basePrice));
             Id = id;
             Name = name;
             BasePrice = basePrice;
@@ -31,13 +31,15 @@ namespace BottomDrawer.Core
     public static class GameRules
     {
         public const int BaseStamina = 100;
+        // Ensures 32-bit float can represent every adjacent price step distinctly.
+        public const int MaximumBasePrice = 100000;
         public const int MaxUpgradeLevel = 5;
 
         // A strict, globally monotonic invariant: more valuable BASE items always weigh more.
         // Profit upgrades affect sale receipts, never intrinsic item mass.
         public static float WeightFromPrice(int basePrice)
         {
-            if (basePrice <= 0) throw new ArgumentOutOfRangeException(nameof(basePrice));
+            if (basePrice <= 0 || basePrice > MaximumBasePrice) throw new ArgumentOutOfRangeException(nameof(basePrice));
             return 0.25f + 0.015f * basePrice;
         }
 
